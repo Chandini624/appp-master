@@ -1,15 +1,15 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
-import {
-  FaUserInjured,
-  FaCheckCircle,
-  FaTimesCircle,
-} from 'react-icons/fa';
+import { FaUserInjured, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import './AppointmentsList.css';
 
 const AppointmentsList = () => {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [modalType, setModalType] = useState('success');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const fetchAppointments = useCallback(async () => {
     try {
@@ -27,53 +27,89 @@ const AppointmentsList = () => {
     fetchAppointments();
   }, [fetchAppointments]);
 
+  const showAlert = (message, type = 'success') => {
+    setModalMessage(message);
+    setModalType(type);
+    setShowModal(true);
+
+    setTimeout(() => {
+      setShowModal(false);
+    }, 3000);
+  };
+
   const updateAppointmentStatus = async (id, action) => {
     try {
-      await axios.patch(`http://localhost:7771/api/appointments1/${id}`, {
+      const response = await axios.patch(`http://localhost:7771/api/appointments1/${id}`, {
         status: action === 'confirm' ? 'confirmed' : 'cancelled',
       });
-      fetchAppointments();
+
+      if (response.status === 200) {
+        showAlert(`${action === 'confirm' ? 'Confirmed' : 'Cancelled'} successfully!`, 'success');
+        fetchAppointments();
+      } else {
+        showAlert('Something went wrong!', 'error');
+      }
     } catch (err) {
-      alert('Failed to update appointment');
+      showAlert('Failed to update appointment', 'error');
     }
   };
 
+  const filteredAppointments = appointments.filter((appt) =>
+    appt.patientName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    appt.doctor.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="appointments-container">
-      <h2 className="appointments-title">📋 All Appointments</h2>
+      <div className="appointments-header">
+        <h2 className="appointments-title">📋 All Appointments</h2>
+        <input
+          type="text"
+          placeholder="Search by patient or doctor..."
+          className="appointments-search"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
 
       {loading ? (
         <div className="appointments-loading">Loading...</div>
-      ) : appointments.length === 0 ? (
-        <div className="appointments-empty">No appointments available.</div>
+      ) : filteredAppointments.length === 0 ? (
+        <div className="appointments-empty">No appointments found.</div>
       ) : (
         <div className="appointments-table-container">
           <table className="appointments-table">
             <thead>
               <tr>
-                <th>#</th>
-                <th>Patient</th>
-                <th>Doctor</th>
+                <th>PatientsID</th>
+                <th>Patient Name</th>
+                <th>Patient Gender</th>
+                <th>Patient Age</th>
+                <th>Patient MobileNo</th>
+                <th>Doctor Name</th>
                 <th>Date</th>
                 <th>Time</th>
-                <th>Status</th>
+                <th>Appointment Status</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              {appointments.map((appt, index) => (
+              {filteredAppointments.map((appt) => (
                 <tr key={appt.id}>
-                  <td>{index + 1}</td>
-                  <td className="patient-name">
+                  <td>{appt.id}</td>
+                  <td>
                     <FaUserInjured className="icon" /> {appt.patientName}
                   </td>
+                  <td>{appt.gender}</td>
+                  <td>{appt.patientAge}</td>
+                  <td>{appt.mobileNo}</td>
                   <td>{appt.doctor}</td>
                   <td>{appt.date}</td>
                   <td>{appt.time}</td>
                   <td>
-                    {appt.status === 'confirmed' ? (
+                    {appt.appointmentStatus === 'confirmed' ? (
                       <FaCheckCircle className="icon green" />
-                    ) : appt.status === 'cancelled' ? (
+                    ) : appt.appointmentStatus === 'cancelled' ? (
                       <FaTimesCircle className="icon red" />
                     ) : (
                       'Pending'
@@ -96,6 +132,21 @@ const AppointmentsList = () => {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {showModal && (
+        <div className="modal">
+          <div className={`modal-content ${modalType}`}>
+            <div className="modal-icon">
+              {modalType === 'success' ? (
+                <FaCheckCircle className="icon green" />
+              ) : (
+                <FaTimesCircle className="icon red" />
+              )}
+            </div>
+            <div className="modal-message">{modalMessage}</div>
+          </div>
         </div>
       )}
     </div>

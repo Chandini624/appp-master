@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import './BookAppointment.css';
 import {
   FaUser,
@@ -10,15 +11,12 @@ import {
   FaPrint,
 } from 'react-icons/fa';
 
-const doctorFees = {
-  'Dr. Smith': 500,
-  'Dr. Kumar': 600,
-  'Dr. Emily': 700,
-};
-
 const BookAppointment = () => {
   const [form, setForm] = useState({
     patientName: '',
+    gender:'',
+    patientAge:'',
+    mobileNo:'',
     doctor: '',
     date: '',
     time: '',
@@ -29,12 +27,34 @@ const BookAppointment = () => {
   const [report, setReport] = useState(null);
   const [sequenceNo, setSequenceNo] = useState(1);
   const [bookingTime, setBookingTime] = useState('');
+  const [doctors, setDoctors] = useState([]);
+  const [availableTimes, setAvailableTimes] = useState([]);
+
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const res = await fetch('http://localhost:7771/api/doctors');
+        const data = await res.json();
+        setDoctors(data.filter((d) => d.doctorName)); // Remove empty items
+      } catch (error) {
+        console.error('Failed to fetch doctors:', error);
+      }
+    };
+
+    fetchDoctors();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === 'doctor') {
-      const fee = doctorFees[value] || '';
-      setForm({ ...form, doctor: value, fee });
+      const selectedDoctor = doctors.find((d) => d.doctorName === value);
+      if (selectedDoctor) {
+        setForm({ ...form, doctor: value, fee: selectedDoctor.doctorfee });
+        setAvailableTimes(selectedDoctor.doctorAvailabletime || []);
+      } else {
+        setForm({ ...form, doctor: value, fee: '' });
+        setAvailableTimes([]);
+      }
     } else {
       setForm({ ...form, [name]: value });
     }
@@ -42,6 +62,7 @@ const BookAppointment = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('Submitting form...', form);
 
     try {
       const response = await fetch('http://localhost:7771/api/appointments1', {
@@ -61,12 +82,16 @@ const BookAppointment = () => {
         setSequenceNo((prev) => prev + 1);
         setForm({
           patientName: '',
+          gender:'',
+          patientAge:'',
+          mobileNo:'',
           doctor: '',
           date: '',
           time: '',
           reason: '',
           fee: '',
         });
+        setAvailableTimes([]);
       } else {
         alert(`❌ Failed: ${data.message || 'Unknown error'}`);
       }
@@ -155,6 +180,42 @@ const BookAppointment = () => {
             required
           />
         </div>
+          <div className="form-group">
+          <FaUser className="form-icon" />
+          <input
+            type="text"
+            name="gender"
+            placeholder="Patient Gender"
+            value={form.gender}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        
+         <div className="form-group">
+          <FaUser className="form-icon" />
+          <input
+            type="text"
+            name="patientAge"
+            placeholder="Patient Age"
+            value={form.patientAge}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+          <div className="form-group">
+          <FaUser className="form-icon" />
+          <input
+            type="text"
+            name="mobileNo"
+            placeholder="Patient MobileNo"
+            value={form.mobileNo}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
 
         <div className="form-group">
           <FaUserMd className="form-icon" />
@@ -165,8 +226,10 @@ const BookAppointment = () => {
             required
           >
             <option value="">Select Doctor</option>
-            {Object.keys(doctorFees).map((doc) => (
-              <option key={doc} value={doc}>{doc}</option>
+            {doctors.map((doc) => (
+              <option key={doc.id} value={doc.doctorName}>
+                {doc.doctorName} 
+              </option>
             ))}
           </select>
         </div>
@@ -196,13 +259,19 @@ const BookAppointment = () => {
 
         <div className="form-group">
           <FaClock className="form-icon" />
-          <input
-            type="time"
+          <select
             name="time"
             value={form.time}
             onChange={handleChange}
             required
-          />
+          >
+            <option value="">Select Time Slot</option>
+            {availableTimes.map((slot, index) => (
+              <option key={index} value={slot}>
+                {slot}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="form-group">
@@ -265,7 +334,7 @@ const BookAppointment = () => {
               <FaPrint /> Print Report
             </button>
             <button className="close-btn" onClick={() => setReport(null)}>
-           Close Report
+              Close Report
             </button>
           </div>
         </div>

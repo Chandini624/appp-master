@@ -49,14 +49,14 @@ const PatientsPage = () => {
   
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div style={{ padding: '30px' }}>
       <h2>Patients List</h2>
       <input
         type="text"
         placeholder="Filter by Name..."
         value={filterText}
         onChange={handleFilterChange}
-        style={{ marginBottom: '10px', padding: '5px' }}
+        style={{ marginBottom: '20px', padding: '30px' }}
       />
       <button className="btn btn-primary create-btn" onClick={() => setShowModal(true)}>
   <i className="bi bi-plus-circle me-2"></i> Create
