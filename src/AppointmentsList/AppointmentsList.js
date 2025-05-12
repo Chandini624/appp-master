@@ -86,6 +86,8 @@ const AppointmentsList = () => {
                 <th>Patient Gender</th>
                 <th>Patient Age</th>
                 <th>Patient MobileNo</th>
+                <th>Patient EmailId</th>
+                <th>Patient Address</th>
                 <th>Doctor Name</th>
                 <th>Date</th>
                 <th>Time</th>
@@ -103,6 +105,8 @@ const AppointmentsList = () => {
                   <td>{appt.gender}</td>
                   <td>{appt.patientAge}</td>
                   <td>{appt.mobileNo}</td>
+                 <td>{appt.EmailId}</td>
+                  <td>{appt.Address}</td>
                   <td>{appt.doctor}</td>
                   <td>{appt.date}</td>
                   <td>{appt.time}</td>

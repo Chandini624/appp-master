@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import './BookAppointment.css';
 import {
@@ -14,9 +13,11 @@ import {
 const BookAppointment = () => {
   const [form, setForm] = useState({
     patientName: '',
-    gender:'',
-    patientAge:'',
-    mobileNo:'',
+    gender: '',
+    patientAge: '',
+    mobileNo: '',
+    Email:'',
+    Address:'',
     doctor: '',
     date: '',
     time: '',
@@ -35,7 +36,7 @@ const BookAppointment = () => {
       try {
         const res = await fetch('http://localhost:7771/api/doctors');
         const data = await res.json();
-        setDoctors(data.filter((d) => d.doctorName)); // Remove empty items
+        setDoctors(data.filter((d) => d.doctorName));
       } catch (error) {
         console.error('Failed to fetch doctors:', error);
       }
@@ -82,9 +83,11 @@ const BookAppointment = () => {
         setSequenceNo((prev) => prev + 1);
         setForm({
           patientName: '',
-          gender:'',
-          patientAge:'',
-          mobileNo:'',
+          gender: '',
+          patientAge: '',
+          mobileNo: '',
+          Email:'',
+          Address:'',
           doctor: '',
           date: '',
           time: '',
@@ -180,19 +183,22 @@ const BookAppointment = () => {
             required
           />
         </div>
-          <div className="form-group">
+
+        <div className="form-group">
           <FaUser className="form-icon" />
-          <input
-            type="text"
+          <select
             name="gender"
-            placeholder="Patient Gender"
             value={form.gender}
             onChange={handleChange}
             required
-          />
+          >
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
         </div>
-        
-         <div className="form-group">
+
+        <div className="form-group">
           <FaUser className="form-icon" />
           <input
             type="text"
@@ -204,7 +210,7 @@ const BookAppointment = () => {
           />
         </div>
 
-          <div className="form-group">
+        <div className="form-group">
           <FaUser className="form-icon" />
           <input
             type="text"
@@ -215,7 +221,28 @@ const BookAppointment = () => {
             required
           />
         </div>
-
+         <div className="form-group">
+          <FaUser className="form-icon" />
+          <input
+            type="text"
+            name="EmailId"
+            placeholder="Patient EmailId"
+            value={form.EmailId}
+            onChange={handleChange}
+            required
+          />
+        </div>
+         <div className="form-group">
+          <FaUser className="form-icon" />
+          <input
+            type="text"
+            name="Address"
+            placeholder="Patient AddressS"
+            value={form.mobileNo}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
         <div className="form-group">
           <FaUserMd className="form-icon" />
@@ -228,7 +255,7 @@ const BookAppointment = () => {
             <option value="">Select Doctor</option>
             {doctors.map((doc) => (
               <option key={doc.id} value={doc.doctorName}>
-                {doc.doctorName} 
+                {doc.doctorName}
               </option>
             ))}
           </select>
