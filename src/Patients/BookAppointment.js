@@ -16,8 +16,8 @@ const BookAppointment = () => {
     gender: '',
     patientAge: '',
     mobileNo: '',
-    Email:'',
-    Address:'',
+    patientEmailId: '',
+    patientAddress: '',
     doctor: '',
     date: '',
     time: '',
@@ -86,8 +86,8 @@ const BookAppointment = () => {
           gender: '',
           patientAge: '',
           mobileNo: '',
-          Email:'',
-          Address:'',
+          patientEmailId: '',
+          patientAddress: '',
           doctor: '',
           date: '',
           time: '',
@@ -113,36 +113,13 @@ const BookAppointment = () => {
         <head>
           <title>Appointment Report</title>
           <style>
-            body {
-              font-family: Arial, sans-serif;
-              padding: 20px;
-            }
-            h2, h4 {
-              text-align: center;
-              margin: 5px 0;
-            }
-            p {
-              text-align: center;
-              margin: 2px 0;
-            }
-            table {
-              width: 100%;
-              border-collapse: collapse;
-              margin: 20px 0;
-            }
-            th, td {
-              border: 1px solid #333;
-              padding: 10px;
-              text-align: center;
-            }
-            .signature-block {
-              margin-top: 40px;
-              text-align: right;
-              font-size: 14px;
-            }
-            .signature-block p {
-              margin: 4px 0;
-            }
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            h2, h4 { text-align: center; margin: 5px 0; }
+            p { text-align: center; margin: 2px 0; }
+            table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+            th, td { border: 1px solid #333; padding: 10px; text-align: center; }
+            .signature-block { margin-top: 40px; text-align: right; font-size: 14px; }
+            .signature-block p { margin: 4px 0; }
             .close-btn {
               display: block;
               margin: 30px auto 0;
@@ -215,32 +192,32 @@ const BookAppointment = () => {
           <input
             type="text"
             name="mobileNo"
-            placeholder="Patient MobileNo"
+            placeholder="Patient Mobile No"
             value={form.mobileNo}
             onChange={handleChange}
             required
           />
         </div>
-         <div className="form-group">
+
+        <div className="form-group">
           <FaUser className="form-icon" />
           <input
             type="text"
-            name="EmailId"
-            placeholder="Patient EmailId"
-            value={form.EmailId}
+            name="patientEmailId"
+            placeholder="Patient Email Id"
+            value={form.patientEmailId}
             onChange={handleChange}
-            required
           />
         </div>
-         <div className="form-group">
+
+        <div className="form-group">
           <FaUser className="form-icon" />
           <input
             type="text"
-            name="Address"
-            placeholder="Patient AddressS"
-            value={form.mobileNo}
+            name="patientAddress"
+            placeholder="Patient Address"
+            value={form.patientAddress}
             onChange={handleChange}
-            required
           />
         </div>
 
