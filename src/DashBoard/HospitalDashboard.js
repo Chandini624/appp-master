@@ -17,6 +17,7 @@ import Patients from "../Patients/Patients";
 import Doctors from "../Doctors/Doctor";
 import Dashboard from "../Admin/Dashboard";
 import AppointmentsList from "../AppointmentsList/AppointmentsList";
+import AdmitForm from "../AdmitForm/AdmitForm"
 
 
 import SettingsPage from "../Settings/SettingsPage";
@@ -49,8 +50,8 @@ const HospitalDashboard = () => {
         return <Dashboard />;
       case "book-appointment":
         return <BookAppointment />;
-      case "patients":
-        return <Patients />;
+      case "AdmitForm":
+        return <AdmitForm />;
       case "appointments":
         return <AppointmentsList />;
       case "doctors":
@@ -78,8 +79,8 @@ const HospitalDashboard = () => {
             <li onClick={() => setActivePage("book-appointment")}>
               <FaBookMedical /> Book Appointment
             </li>
-            <li onClick={() => setActivePage("patients")}>
-              <FaUserInjured /> Patients
+            <li onClick={() => setActivePage("AdmitForm")}>
+              <FaUserInjured /> AdmitForm
             </li>
             <li onClick={() => setActivePage("appointments")}>
               <FaCalendarCheck /> Appointments

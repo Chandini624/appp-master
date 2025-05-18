@@ -33,7 +33,7 @@ const metrics = [
 const Dashboard = () => {
   return (
     <div className="dashboard-container">
-      <h1 className="dashboard-title">🏥 Hospital Overview</h1>
+      <h1 className="dashboard-title">🏥 MediQ</h1>
       <div className="metrics-grid">
         {metrics.map(({ label, value, icon: Icon, color }) => (
           <div key={label} className="metric-card">
